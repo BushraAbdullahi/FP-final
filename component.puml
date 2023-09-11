@@ -1,0 +1,36 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+HIDE_STEREOTYPE()
+
+Person(p_user, "User")
+Person(p_developer, "Developer")
+
+System_Ext(s_news, "News Source", "An external website or platform that provides news articles")
+
+Container(c_detector, "Fake News Detector", "Software") {
+    Component(preprocessor, "Preprocessor", "Cleans and tokenizes the input text")
+    Component(transformer, "Transformer", "Extracts deep features from the input text using BERT or other models")
+    Component(classifier, "Classifier", "Predicts the label and score of the input text using a softmax layer")
+    Component(explainer, "Explainer", "Generates an explanation or evidence for the prediction using attention weights or other methods")
+
+    Boundary(web, "Web Interface") {
+        Component(input, "Input", "Allows the user to enter a news article in text format")
+        Component(output, "Output", "Displays the label, score, and explanation of the prediction")
+        Component(feedback, "Feedback", "Allows the user to provide feedback or report errors to the system")
+    }
+}
+
+Rel(p_user, c_detector, "Interacts with detector")
+Rel(p_user, input, "Enters a news article")
+Rel(p_developer, c_detector, "Writes the code")
+Rel(preprocessor, s_news, "Fetches news article from news source")
+Rel(preprocessor, transformer, "Sends cleaned and tokenized text")
+Rel(transformer, classifier, "Sends deep features")
+Rel(classifier, explainer, "Sends label and score")
+Rel(explainer, output, "Sends explanation or evidence")
+Rel(output, p_user, "Displays results on web interface")
+Rel(feedback, p_user, "Receives feedback or error reports from user")
+Rel(feedback, transformer, "Updates models based on feedback or error reports")
+
+@enduml
